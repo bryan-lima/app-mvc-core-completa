@@ -41,5 +41,6 @@ namespace DevIO.App.ViewModels
 
 
         public FornecedorViewModel Fornecedor { get; set; }
+        public IEnumerable<FornecedorViewModel> Fornecedores { get; set; }
     }
 }
