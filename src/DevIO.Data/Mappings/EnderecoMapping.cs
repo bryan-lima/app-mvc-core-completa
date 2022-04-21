@@ -28,7 +28,6 @@ namespace DevIO.Data.Mappings
                 .HasColumnType("varchar(8)");
 
             builder.Property(endereco => endereco.Complemento)
-                .IsRequired()
                 .HasColumnType("varchar(250)");
 
             builder.Property(endereco => endereco.Bairro)
