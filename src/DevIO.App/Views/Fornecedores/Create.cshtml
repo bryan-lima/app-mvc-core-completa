@@ -44,9 +44,13 @@
                 <a class="btn btn-info" asp-action="Index">Voltar</a>
             </div>
         </form>
-    </div>  
+    </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        BuscaCep();
+    </script>
 }
