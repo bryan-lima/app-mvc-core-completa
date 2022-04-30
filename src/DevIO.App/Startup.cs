@@ -11,12 +11,20 @@ namespace DevIO.App
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
         public IConfiguration Configuration { get; }
+
+        public Startup(IWebHostEnvironment hostEnvironment)
+        {
+            var builder = new ConfigurationBuilder().SetBasePath(hostEnvironment.ContentRootPath)
+                                                    .AddJsonFile(path: "appsettings.json", optional: true, reloadOnChange: true)
+                                                    .AddJsonFile(path: $"appsettings.{hostEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                                                    .AddEnvironmentVariables();
+
+            if (hostEnvironment.IsDevelopment())
+                builder.AddUserSecrets<Startup>();
+
+            Configuration = builder.Build();
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
