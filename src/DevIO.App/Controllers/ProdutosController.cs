@@ -21,7 +21,8 @@ namespace DevIO.App.Controllers
         public ProdutosController(IProdutoRepository produtoRepository,
                                   IProdutoService produtoService,
                                   IFornecedorRepository fornecedorRepository,
-                                  IMapper mapper)
+                                  IMapper mapper,
+                                  INotificador notificador) : base(notificador)
         {
             _produtoRepository = produtoRepository;
             _produtoService = produtoService;
@@ -72,6 +73,9 @@ namespace DevIO.App.Controllers
 
             await _produtoService.Adicionar(_mapper.Map<Produto>(produtoViewModel));
 
+            if (!OperacaoValida())
+                return View(produtoViewModel);
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -120,6 +124,9 @@ namespace DevIO.App.Controllers
 
             await _produtoService.Atualizar(_mapper.Map<Produto>(produtoAtualizacao));
 
+            if (!OperacaoValida())
+                return View(produtoViewModel);
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -145,6 +152,11 @@ namespace DevIO.App.Controllers
                 return NotFound();
 
             await _produtoService.Remover(id);
+
+            if (!OperacaoValida())
+                return View(produtoViewModel);
+
+            TempData["Sucesso"] = "Produto excluído com sucesso!";
 
             return RedirectToAction(nameof(Index));
         }

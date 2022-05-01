@@ -17,7 +17,8 @@ namespace DevIO.App.Controllers
 
         public FornecedoresController(IFornecedorRepository fornecedorRepository,
                                       IFornecedorService fornecedorService,
-                                      IMapper mapper)
+                                      IMapper mapper,
+                                      INotificador notificador) :  base(notificador)
         {
             _fornecedorRepository = fornecedorRepository;
             _fornecedorService = fornecedorService;
@@ -58,6 +59,9 @@ namespace DevIO.App.Controllers
             var fornecedor = _mapper.Map<Fornecedor>(fornecedorViewModel);
             await _fornecedorService.Adicionar(fornecedor);
 
+            if (!OperacaoValida())
+                return View(fornecedorViewModel);
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -86,6 +90,9 @@ namespace DevIO.App.Controllers
             var fornecedor = _mapper.Map<Fornecedor>(fornecedorViewModel);
             await _fornecedorService.Atualizar(fornecedor);
 
+            if (!OperacaoValida())
+                return View(await ObterFornecedorProdutosEndereco(id));
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -111,6 +118,9 @@ namespace DevIO.App.Controllers
                 return NotFound();
 
             await _fornecedorService.Remover(id);
+
+            if (!OperacaoValida())
+                return View(fornecedorViewModel);
 
             return RedirectToAction(nameof(Index));
         }
@@ -149,6 +159,9 @@ namespace DevIO.App.Controllers
                 return PartialView("_AtualizarEndereco", fornecedorViewModel);
 
             await _fornecedorService.AtualizarEndereco(_mapper.Map<Endereco>(fornecedorViewModel.Endereco));
+
+            if (!OperacaoValida())
+                return PartialView("_AtualizarEndereco", fornecedorViewModel);
 
             var url = Url.Action("ObterEndereco", "Fornecedores", new { id= fornecedorViewModel.Endereco.FornecedorId });
 
