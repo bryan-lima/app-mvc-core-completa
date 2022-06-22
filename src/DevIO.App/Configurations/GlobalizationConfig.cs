@@ -9,8 +9,8 @@ namespace DevIO.App.Configurations
     {
         public static IApplicationBuilder UseGlobalizationConfig(this IApplicationBuilder app)
         {
-            var defaultCulture = new CultureInfo("pt-BR");
-            var localizationOptions = new RequestLocalizationOptions
+            CultureInfo defaultCulture = new CultureInfo("pt-BR");
+            RequestLocalizationOptions localizationOptions = new RequestLocalizationOptions
             {
                 DefaultRequestCulture = new RequestCulture(defaultCulture),
                 SupportedCultures = new List<CultureInfo> { defaultCulture },
