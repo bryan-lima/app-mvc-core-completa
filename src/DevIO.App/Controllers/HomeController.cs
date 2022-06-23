@@ -1,11 +1,6 @@
 ﻿using DevIO.App.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DevIO.App.Controllers
 {
@@ -31,32 +26,30 @@ namespace DevIO.App.Controllers
         [Route("erro/{id:length(3,3)}")]
         public IActionResult Errors(int id)
         {
-            var modelErro = new ErrorViewModel();
+            ErrorViewModel _modelErro = new ErrorViewModel();
 
-            if (id == 500)
+            switch (id)
             {
-                modelErro.Mensagem = "Ocorreu um erro! Tente novamente mais tarde ou contate nosso suporte.";
-                modelErro.Titulo = "Ocorreu um erro!";
-                modelErro.ErrorCode = id;
-            }
-            else if (id == 404)
-            {
-                modelErro.Mensagem = "A página que está procurando não existe! <br />Em caso de dúvida entre em contato com nosso suporte.";
-                modelErro.Titulo = "Ops! Página não encontrada";
-                modelErro.ErrorCode = id;
-            }
-            else if (id == 403)
-            {
-                modelErro.Mensagem = "Você não tem permissão para fazer isto.";
-                modelErro.Titulo = "Acesso negado";
-                modelErro.ErrorCode = id;
-            }
-            else
-            {
-                return StatusCode(500);
+                case 500:
+                    _modelErro.Mensagem = "Ocorreu um erro! Tente novamente mais tarde ou contate nosso suporte.";
+                    _modelErro.Titulo = "Ocorreu um erro!";
+                    _modelErro.ErrorCode = id;
+                    break;
+                case 404:
+                    _modelErro.Mensagem = "A página que está procurando não existe! <br />Em caso de dúvida entre em contato com nosso suporte.";
+                    _modelErro.Titulo = "Ops! Página não encontrada";
+                    _modelErro.ErrorCode = id;
+                    break;
+                case 403:
+                    _modelErro.Mensagem = "Você não tem permissão para fazer isto.";
+                    _modelErro.Titulo = "Acesso negado";
+                    _modelErro.ErrorCode = id;
+                    break;
+                default:
+                    return StatusCode(500);
             }
 
-            return View("Error", modelErro);
+            return View("Error", _modelErro);
         }
     }
 }

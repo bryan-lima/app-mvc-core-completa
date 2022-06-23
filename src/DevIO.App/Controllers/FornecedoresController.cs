@@ -21,7 +21,7 @@ namespace DevIO.App.Controllers
         public FornecedoresController(IFornecedorRepository fornecedorRepository,
                                       IFornecedorService fornecedorService,
                                       IMapper mapper,
-                                      INotificador notificador) :  base(notificador)
+                                      INotificador notificador) : base(notificador)
         {
             _fornecedorRepository = fornecedorRepository;
             _fornecedorService = fornecedorService;
@@ -39,12 +39,12 @@ namespace DevIO.App.Controllers
         [Route("dados-do-fornecedor/{id:guid}")]
         public async Task<IActionResult> Details(Guid id)
         {
-            var fornecedorViewModel = await ObterFornecedorEndereco(id);
-            
-            if (fornecedorViewModel == null)
+            FornecedorViewModel _fornecedorViewModel = await ObterFornecedorEndereco(id);
+
+            if (_fornecedorViewModel == null)
                 return NotFound();
 
-            return View(fornecedorViewModel);
+            return View(_fornecedorViewModel);
         }
 
         [ClaimsAuthorize("Fornecedor", "Adicionar")]
@@ -62,8 +62,7 @@ namespace DevIO.App.Controllers
             if (!ModelState.IsValid)
                 return View(fornecedorViewModel);
 
-            var fornecedor = _mapper.Map<Fornecedor>(fornecedorViewModel);
-            await _fornecedorService.Adicionar(fornecedor);
+            await _fornecedorService.Adicionar(_mapper.Map<Fornecedor>(fornecedorViewModel));
 
             if (!OperacaoValida())
                 return View(fornecedorViewModel);
@@ -75,12 +74,12 @@ namespace DevIO.App.Controllers
         [Route("editar-fornecedor/{id:guid}")]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var fornecedorViewModel = await ObterFornecedorProdutosEndereco(id);
+            FornecedorViewModel _fornecedorViewModel = await ObterFornecedorProdutosEndereco(id);
 
-            if (fornecedorViewModel == null)
+            if (_fornecedorViewModel == null)
                 return NotFound();
 
-            return View(fornecedorViewModel);
+            return View(_fornecedorViewModel);
         }
 
         [ClaimsAuthorize("Fornecedor", "Editar")]
@@ -94,8 +93,7 @@ namespace DevIO.App.Controllers
             if (!ModelState.IsValid)
                 return View(fornecedorViewModel);
 
-            var fornecedor = _mapper.Map<Fornecedor>(fornecedorViewModel);
-            await _fornecedorService.Atualizar(fornecedor);
+            await _fornecedorService.Atualizar(_mapper.Map<Fornecedor>(fornecedorViewModel));
 
             if (!OperacaoValida())
                 return View(await ObterFornecedorProdutosEndereco(id));
@@ -107,12 +105,12 @@ namespace DevIO.App.Controllers
         [Route("excluir-fornecedor/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var fornecedorViewModel = await ObterFornecedorEndereco(id);
+            FornecedorViewModel _fornecedorViewModel = await ObterFornecedorEndereco(id);
 
-            if (fornecedorViewModel == null)
+            if (_fornecedorViewModel == null)
                 return NotFound();
 
-            return View(fornecedorViewModel);
+            return View(_fornecedorViewModel);
         }
 
         [ClaimsAuthorize("Fornecedor", "Excluir")]
@@ -120,15 +118,15 @@ namespace DevIO.App.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var fornecedorViewModel = await ObterFornecedorEndereco(id);
+            FornecedorViewModel _fornecedorViewModel = await ObterFornecedorEndereco(id);
 
-            if (fornecedorViewModel == null)
+            if (_fornecedorViewModel == null)
                 return NotFound();
 
             await _fornecedorService.Remover(id);
 
             if (!OperacaoValida())
-                return View(fornecedorViewModel);
+                return View(_fornecedorViewModel);
 
             return RedirectToAction(nameof(Index));
         }
@@ -137,24 +135,25 @@ namespace DevIO.App.Controllers
         [Route("obter-endereco-fornecedor/{id:guid}")]
         public async Task<IActionResult> ObterEndereco(Guid id)
         {
-            var fornecedor = await ObterFornecedorEndereco(id);
+            FornecedorViewModel _fornecedor = await ObterFornecedorEndereco(id);
 
-            if (fornecedor == null)
+            if (_fornecedor == null)
                 return NotFound();
 
-            return PartialView("_DetalhesEndereco", fornecedor);
+            return PartialView("_DetalhesEndereco", _fornecedor);
         }
 
         [ClaimsAuthorize("Fornecedor", "Editar")]
         [Route("atualizar-endereco-fornecedor/{id:guid}")]
         public async Task<IActionResult> AtualizarEndereco(Guid id)
         {
-            var fornecedor = await ObterFornecedorEndereco(id);
+            FornecedorViewModel _fornecedor = await ObterFornecedorEndereco(id);
 
-            if (fornecedor == null)
+            if (_fornecedor == null)
                 return NotFound();
 
-            return PartialView("_AtualizarEndereco", new FornecedorViewModel { Endereco = fornecedor.Endereco });
+            return PartialView(viewName: "_AtualizarEndereco",
+                               model: new FornecedorViewModel { Endereco = _fornecedor.Endereco });
         }
 
         [ClaimsAuthorize("Fornecedor", "Editar")]
@@ -166,16 +165,22 @@ namespace DevIO.App.Controllers
             ModelState.Remove("Documento");
 
             if (!ModelState.IsValid)
-                return PartialView("_AtualizarEndereco", fornecedorViewModel);
+                return PartialView(viewName: "_AtualizarEndereco",
+                                   model: fornecedorViewModel);
 
             await _fornecedorService.AtualizarEndereco(_mapper.Map<Endereco>(fornecedorViewModel.Endereco));
 
             if (!OperacaoValida())
-                return PartialView("_AtualizarEndereco", fornecedorViewModel);
+                return PartialView(viewName: "_AtualizarEndereco",
+                                   model: fornecedorViewModel);
 
-            var url = Url.Action("ObterEndereco", "Fornecedores", new { id= fornecedorViewModel.Endereco.FornecedorId });
+            string _url = Url.Action("ObterEndereco", "Fornecedores", new { id = fornecedorViewModel.Endereco.FornecedorId });
 
-            return Json(new { success = true, url });
+            return Json(new
+            {
+                success = true,
+                _url
+            });
         }
 
         private async Task<FornecedorViewModel> ObterFornecedorEndereco(Guid id)

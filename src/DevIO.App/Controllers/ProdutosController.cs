@@ -16,21 +16,21 @@ namespace DevIO.App.Controllers
     [Authorize]
     public class ProdutosController : BaseController
     {
-        private readonly IProdutoRepository _produtoRepository;
         private readonly IFornecedorRepository _fornecedorRepository;
-        private readonly IProdutoService _produtoService;
         private readonly IMapper _mapper;
+        private readonly IProdutoRepository _produtoRepository;
+        private readonly IProdutoService _produtoService;
 
-        public ProdutosController(IProdutoRepository produtoRepository,
-                                  IProdutoService produtoService,
-                                  IFornecedorRepository fornecedorRepository,
+        public ProdutosController(IFornecedorRepository fornecedorRepository,
                                   IMapper mapper,
-                                  INotificador notificador) : base(notificador)
+                                  INotificador notificador,
+                                  IProdutoRepository produtoRepository,
+                                  IProdutoService produtoService) : base(notificador)
         {
+            _fornecedorRepository = fornecedorRepository;
+            _mapper = mapper;
             _produtoRepository = produtoRepository;
             _produtoService = produtoService;
-            _mapper = mapper;
-            _fornecedorRepository = fornecedorRepository;
         }
 
         [AllowAnonymous]
@@ -44,21 +44,19 @@ namespace DevIO.App.Controllers
         [Route("dados-do-produto/{id:guid}")]
         public async Task<IActionResult> Details(Guid id)
         {
-            var produtoViewModel = await ObterProduto(id);
+            ProdutoViewModel _produtoViewModel = await ObterProduto(id);
 
-            if (produtoViewModel == null)
+            if (_produtoViewModel == null)
                 return NotFound();
 
-            return View(produtoViewModel);
+            return View(_produtoViewModel);
         }
 
         [ClaimsAuthorize("Produto", "Adicionar")]
         [Route("novo-produto")]
         public async Task<IActionResult> Create()
         {
-            var produtoViewModel = await PopularFornecedores(new ProdutoViewModel());
-
-            return View(produtoViewModel);
+            return View(await PopularFornecedores(new ProdutoViewModel()));
         }
 
         [ClaimsAuthorize("Produto", "Adicionar")]
@@ -71,11 +69,12 @@ namespace DevIO.App.Controllers
             if (!ModelState.IsValid)
                 return View(produtoViewModel);
 
-            var imgPrefixo = Guid.NewGuid() + "_";
-            if (!await UploadArquivo(produtoViewModel.ImagemUpload, imgPrefixo))
+            string _prefixo = $"{Guid.NewGuid()}_";
+
+            if (!await UploadArquivo(produtoViewModel.ImagemUpload, _prefixo))
                 return View(produtoViewModel);
 
-            produtoViewModel.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
+            produtoViewModel.Imagem = _prefixo + produtoViewModel.ImagemUpload.FileName;
 
             await _produtoService.Adicionar(_mapper.Map<Produto>(produtoViewModel));
 
@@ -89,12 +88,12 @@ namespace DevIO.App.Controllers
         [Route("editar-produto/{id:guid}")]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var produtoViewModel = await ObterProduto(id);
+            ProdutoViewModel _produtoViewModel = await ObterProduto(id);
 
-            if (produtoViewModel == null)
+            if (_produtoViewModel == null)
                 return NotFound();
 
-            return View(produtoViewModel);
+            return View(_produtoViewModel);
         }
 
         [ClaimsAuthorize("Produto", "Editar")]
@@ -105,31 +104,30 @@ namespace DevIO.App.Controllers
             if (id != produtoViewModel.Id)
                 return NotFound();
 
-            var produtoAtualizacao = await ObterProduto(id);
-            
-            produtoViewModel.Fornecedor = produtoAtualizacao.Fornecedor;
-            produtoViewModel.Imagem = produtoAtualizacao.Imagem;
+            ProdutoViewModel _produtoAtualizacao = await ObterProduto(id);
+
+            produtoViewModel.Fornecedor = _produtoAtualizacao.Fornecedor;
+            produtoViewModel.Imagem = _produtoAtualizacao.Imagem;
 
             if (!ModelState.IsValid)
                 return View(produtoViewModel);
 
             if (produtoViewModel.ImagemUpload != null)
             {
-                var imgPrefixo = Guid.NewGuid() + "_";
-                if (!await UploadArquivo(produtoViewModel.ImagemUpload, imgPrefixo))
-                {
-                    return View(produtoViewModel);
-                }
+                string _prefixo = $"{Guid.NewGuid()}_";
 
-                produtoAtualizacao.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
+                if (!await UploadArquivo(produtoViewModel.ImagemUpload, _prefixo))
+                    return View(produtoViewModel);
+
+                _produtoAtualizacao.Imagem = _prefixo + produtoViewModel.ImagemUpload.FileName;
             }
 
-            produtoAtualizacao.Nome = produtoViewModel.Nome;
-            produtoAtualizacao.Descricao = produtoViewModel.Descricao;
-            produtoAtualizacao.Valor = produtoViewModel.Valor;
-            produtoAtualizacao.Ativo = produtoViewModel.Ativo;
+            _produtoAtualizacao.Nome = produtoViewModel.Nome;
+            _produtoAtualizacao.Descricao = produtoViewModel.Descricao;
+            _produtoAtualizacao.Valor = produtoViewModel.Valor;
+            _produtoAtualizacao.Ativo = produtoViewModel.Ativo;
 
-            await _produtoService.Atualizar(_mapper.Map<Produto>(produtoAtualizacao));
+            await _produtoService.Atualizar(_mapper.Map<Produto>(_produtoAtualizacao));
 
             if (!OperacaoValida())
                 return View(produtoViewModel);
@@ -141,12 +139,12 @@ namespace DevIO.App.Controllers
         [Route("excluir-produto/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var produtoViewModel = await ObterProduto(id);
+            ProdutoViewModel _produtoViewModel = await ObterProduto(id);
 
-            if (produtoViewModel == null)
+            if (_produtoViewModel == null)
                 return NotFound();
 
-            return View(produtoViewModel);
+            return View(_produtoViewModel);
         }
 
         [ClaimsAuthorize("Produto", "Excluir")]
@@ -154,15 +152,15 @@ namespace DevIO.App.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var produtoViewModel = await ObterProduto(id);
+            ProdutoViewModel _produtoViewModel = await ObterProduto(id);
 
-            if (produtoViewModel == null)
+            if (_produtoViewModel == null)
                 return NotFound();
 
             await _produtoService.Remover(id);
 
             if (!OperacaoValida())
-                return View(produtoViewModel);
+                return View(_produtoViewModel);
 
             TempData["Sucesso"] = "Produto excluído com sucesso!";
 
@@ -171,10 +169,10 @@ namespace DevIO.App.Controllers
 
         private async Task<ProdutoViewModel> ObterProduto(Guid id)
         {
-            var produto = _mapper.Map<ProdutoViewModel>(await _produtoRepository.ObterProdutoFornecedor(id));
-            produto.Fornecedores = _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());
+            ProdutoViewModel _produto = _mapper.Map<ProdutoViewModel>(await _produtoRepository.ObterProdutoFornecedor(id));
+            _produto.Fornecedores = _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());
 
-            return produto;
+            return _produto;
         }
 
         private async Task<ProdutoViewModel> PopularFornecedores(ProdutoViewModel produto)
@@ -184,21 +182,25 @@ namespace DevIO.App.Controllers
             return produto;
         }
 
-        private async Task<bool> UploadArquivo(IFormFile arquivo, string imgPrefixo)
+        private async Task<bool> UploadArquivo(IFormFile arquivo, string prefixo)
         {
             if (arquivo.Length <= 0)
                 return false;
 
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imagens", imgPrefixo + arquivo.FileName);
+            string _path = Path.Combine(path1: Directory.GetCurrentDirectory(),
+                                        path2: "wwwroot/imagens",
+                                        path3: $"{prefixo}{arquivo.FileName}");
 
-            if (System.IO.File.Exists(path))
+            if (System.IO.File.Exists(_path))
             {
-                ModelState.AddModelError(string.Empty, "Já existe um arquivo com este nome!");
+                ModelState.AddModelError(key: string.Empty,
+                                         errorMessage: "Já existe um arquivo com este nome!");
+
                 return false;
             }
 
             // Gravar a imagem em disco
-            using (var stream = new FileStream(path, FileMode.Create))
+            using (FileStream stream = new FileStream(_path, FileMode.Create))
             {
                 await arquivo.CopyToAsync(stream);
             }
