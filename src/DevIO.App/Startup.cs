@@ -15,15 +15,15 @@ namespace DevIO.App
 
         public Startup(IWebHostEnvironment hostEnvironment)
         {
-            var builder = new ConfigurationBuilder().SetBasePath(hostEnvironment.ContentRootPath)
-                                                    .AddJsonFile(path: "appsettings.json", optional: true, reloadOnChange: true)
-                                                    .AddJsonFile(path: $"appsettings.{hostEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
-                                                    .AddEnvironmentVariables();
+            IConfigurationBuilder _builder = new ConfigurationBuilder().SetBasePath(hostEnvironment.ContentRootPath)
+                                                                       .AddJsonFile(path: "appsettings.json", optional: true, reloadOnChange: true)
+                                                                       .AddJsonFile(path: $"appsettings.{hostEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                                                                       .AddEnvironmentVariables();
 
             if (hostEnvironment.IsDevelopment())
-                builder.AddUserSecrets<Startup>();
+                _builder.AddUserSecrets<Startup>();
 
-            Configuration = builder.Build();
+            Configuration = _builder.Build();
         }
 
         public void ConfigureServices(IServiceCollection services)
