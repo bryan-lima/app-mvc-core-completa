@@ -2,11 +2,8 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.Localization;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DevIO.App.Extensions
 {
@@ -16,7 +13,7 @@ namespace DevIO.App.Extensions
         {
             try
             {
-                var moeda = Convert.ToDecimal(value, new CultureInfo("pt-BR"));
+                decimal _moeda = Convert.ToDecimal(value, new CultureInfo("pt-BR"));
             }
             catch (Exception)
             {
@@ -36,7 +33,7 @@ namespace DevIO.App.Extensions
 
         public override void AddValidation(ClientModelValidationContext context)
         {
-            if (context == null)
+            if (context is null)
                 throw new ArgumentException(nameof(context));
 
             MergeAttribute(context.Attributes, "data-val", "true");

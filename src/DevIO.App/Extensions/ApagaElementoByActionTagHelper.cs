@@ -20,15 +20,15 @@ namespace DevIO.App.Extensions
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            if (context == null)
+            if (context is null)
                 throw new ArgumentNullException(nameof(context));
 
-            if (output == null)
+            if (output is null)
                 throw new ArgumentNullException(nameof(output));
 
-            var action = _contextAccessor.HttpContext.GetRouteData().Values["action"].ToString();
+            string _action = _contextAccessor.HttpContext.GetRouteData().Values["action"].ToString();
 
-            if (ActionName.Contains(action))
+            if (ActionName.Contains(_action))
                 return;
 
             output.SuppressOutput();

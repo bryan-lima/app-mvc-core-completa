@@ -1,8 +1,7 @@
 ﻿using DevIO.Business.Interfaces;
+using DevIO.Business.Notificacoes;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DevIO.App.Extensions
@@ -18,9 +17,10 @@ namespace DevIO.App.Extensions
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var notificacoes = await Task.FromResult(_notificador.ObterNotificacoes());
+            List<Notificacao> _notificacoes = await Task.FromResult(_notificador.ObterNotificacoes());
 
-            notificacoes.ForEach(n => ViewData.ModelState.AddModelError(string.Empty, n.Mensagem));
+            _notificacoes.ForEach(notificacao => ViewData.ModelState.AddModelError(key: string.Empty,
+                                                                                   errorMessage: notificacao.Mensagem));
 
             return View();
         }
