@@ -1,9 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DevIO.Business.Notificacoes
+﻿namespace DevIO.Business.Notificacoes
 {
     public class Notificacao
     {

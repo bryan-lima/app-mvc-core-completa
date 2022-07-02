@@ -9,23 +9,23 @@ namespace DevIO.Business.Services
 {
     public class FornecedorService : BaseService, IFornecedorService
     {
-        private readonly IFornecedorRepository _fornecedorRepository;
         private readonly IEnderecoRepository _enderecoRepository;
+        private readonly IFornecedorRepository _fornecedorRepository;
 
-        public FornecedorService(IFornecedorRepository fornecedorRepository,
-                                 IEnderecoRepository enderecoRepository,
+        public FornecedorService(IEnderecoRepository enderecoRepository,
+                                 IFornecedorRepository fornecedorRepository,
                                  INotificador notificador) : base(notificador)
         {
-            _fornecedorRepository = fornecedorRepository;
             _enderecoRepository = enderecoRepository;
+            _fornecedorRepository = fornecedorRepository;
         }
 
         public async Task Adicionar(Fornecedor fornecedor)
         {
-            if (!ExecutarValidacao(new FornecedorValidation(), fornecedor) || !ExecutarValidacao(new EnderecoValidation(), fornecedor.Endereco))
+            if (!ExecutarValidacao(validacao: new FornecedorValidation(), entidade: fornecedor) || !ExecutarValidacao(validacao: new EnderecoValidation(), entidade: fornecedor.Endereco))
                 return;
 
-            if (_fornecedorRepository.Buscar(f => f.Documento == fornecedor.Documento).Result.Any())
+            if (_fornecedorRepository.Buscar(f => f.Documento.Equals(fornecedor.Documento)).Result.Any())
             {
                 Notificar("Já existe fornecedor com este documento informado");
                 return;
