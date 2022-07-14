@@ -16,10 +16,16 @@ namespace DevIO.App.Controllers
     [Authorize]
     public class ProdutosController : BaseController
     {
+        #region Private Fields
+
         private readonly IFornecedorRepository _fornecedorRepository;
         private readonly IMapper _mapper;
         private readonly IProdutoRepository _produtoRepository;
         private readonly IProdutoService _produtoService;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public ProdutosController(IFornecedorRepository fornecedorRepository,
                                   IMapper mapper,
@@ -32,6 +38,10 @@ namespace DevIO.App.Controllers
             _produtoRepository = produtoRepository;
             _produtoService = produtoService;
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         [AllowAnonymous]
         [Route("lista-de-produtos")]
@@ -167,6 +177,10 @@ namespace DevIO.App.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
         private async Task<ProdutoViewModel> ObterProduto(Guid id)
         {
             ProdutoViewModel _produto = _mapper.Map<ProdutoViewModel>(await _produtoRepository.ObterProdutoFornecedor(id));
@@ -207,5 +221,7 @@ namespace DevIO.App.Controllers
 
             return true;
         }
+
+        #endregion Private Methods
     }
 }

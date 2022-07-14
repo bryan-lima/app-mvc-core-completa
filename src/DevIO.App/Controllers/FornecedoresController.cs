@@ -14,9 +14,15 @@ namespace DevIO.App.Controllers
     [Authorize]
     public class FornecedoresController : BaseController
     {
+        #region Private Fields
+
         private readonly IFornecedorRepository _fornecedorRepository;
         private readonly IFornecedorService _fornecedorService;
         private readonly IMapper _mapper;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public FornecedoresController(IFornecedorRepository fornecedorRepository,
                                       IFornecedorService fornecedorService,
@@ -27,6 +33,10 @@ namespace DevIO.App.Controllers
             _fornecedorService = fornecedorService;
             _mapper = mapper;
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         [AllowAnonymous]
         [Route("lista-de-fornecedores")]
@@ -183,6 +193,10 @@ namespace DevIO.App.Controllers
             });
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
         private async Task<FornecedorViewModel> ObterFornecedorEndereco(Guid id)
         {
             return _mapper.Map<FornecedorViewModel>(await _fornecedorRepository.ObterFornecedorEndereco(id));
@@ -192,5 +206,7 @@ namespace DevIO.App.Controllers
         {
             return _mapper.Map<FornecedorViewModel>(await _fornecedorRepository.ObterFornecedorProdutosEndereco(id));
         }
+
+        #endregion Private Methods
     }
 }
