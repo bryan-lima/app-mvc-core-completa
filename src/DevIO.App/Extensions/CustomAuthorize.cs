@@ -11,7 +11,7 @@ namespace DevIO.App.Extensions
     {
         public static bool ValidarClaimsUsuario(HttpContext context, string claimName, string claimValue)
         {
-            return context.User.Identity.IsAuthenticated && context.User.Claims.Any(claim => claim.Type == claimName && claim.Value.Contains(claimValue));
+            return context.User.Identity.IsAuthenticated && context.User.Claims.Any(claim => claim.Type.Equals(claimName) && claim.Value.Contains(claimValue));
         }
     }
 
