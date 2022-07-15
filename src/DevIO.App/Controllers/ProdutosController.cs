@@ -56,7 +56,7 @@ namespace DevIO.App.Controllers
         {
             ProdutoViewModel _produtoViewModel = await ObterProduto(id);
 
-            if (_produtoViewModel == null)
+            if (_produtoViewModel is null)
                 return NotFound();
 
             return View(_produtoViewModel);
@@ -100,7 +100,7 @@ namespace DevIO.App.Controllers
         {
             ProdutoViewModel _produtoViewModel = await ObterProduto(id);
 
-            if (_produtoViewModel == null)
+            if (_produtoViewModel is null)
                 return NotFound();
 
             return View(_produtoViewModel);
@@ -151,7 +151,7 @@ namespace DevIO.App.Controllers
         {
             ProdutoViewModel _produtoViewModel = await ObterProduto(id);
 
-            if (_produtoViewModel == null)
+            if (_produtoViewModel is null)
                 return NotFound();
 
             return View(_produtoViewModel);
@@ -164,7 +164,7 @@ namespace DevIO.App.Controllers
         {
             ProdutoViewModel _produtoViewModel = await ObterProduto(id);
 
-            if (_produtoViewModel == null)
+            if (_produtoViewModel is null)
                 return NotFound();
 
             await _produtoService.Remover(id);

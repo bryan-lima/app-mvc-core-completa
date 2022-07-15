@@ -51,7 +51,7 @@ namespace DevIO.App.Controllers
         {
             FornecedorViewModel _fornecedorViewModel = await ObterFornecedorEndereco(id);
 
-            if (_fornecedorViewModel == null)
+            if (_fornecedorViewModel is null)
                 return NotFound();
 
             return View(_fornecedorViewModel);
@@ -86,7 +86,7 @@ namespace DevIO.App.Controllers
         {
             FornecedorViewModel _fornecedorViewModel = await ObterFornecedorProdutosEndereco(id);
 
-            if (_fornecedorViewModel == null)
+            if (_fornecedorViewModel is null)
                 return NotFound();
 
             return View(_fornecedorViewModel);
@@ -117,7 +117,7 @@ namespace DevIO.App.Controllers
         {
             FornecedorViewModel _fornecedorViewModel = await ObterFornecedorEndereco(id);
 
-            if (_fornecedorViewModel == null)
+            if (_fornecedorViewModel is null)
                 return NotFound();
 
             return View(_fornecedorViewModel);
@@ -130,7 +130,7 @@ namespace DevIO.App.Controllers
         {
             FornecedorViewModel _fornecedorViewModel = await ObterFornecedorEndereco(id);
 
-            if (_fornecedorViewModel == null)
+            if (_fornecedorViewModel is null)
                 return NotFound();
 
             await _fornecedorService.Remover(id);
@@ -147,7 +147,7 @@ namespace DevIO.App.Controllers
         {
             FornecedorViewModel _fornecedor = await ObterFornecedorEndereco(id);
 
-            if (_fornecedor == null)
+            if (_fornecedor is null)
                 return NotFound();
 
             return PartialView("_DetalhesEndereco", _fornecedor);
@@ -159,7 +159,7 @@ namespace DevIO.App.Controllers
         {
             FornecedorViewModel _fornecedor = await ObterFornecedorEndereco(id);
 
-            if (_fornecedor == null)
+            if (_fornecedor is null)
                 return NotFound();
 
             return PartialView(viewName: "_AtualizarEndereco",

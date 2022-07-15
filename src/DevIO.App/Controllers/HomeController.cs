@@ -36,7 +36,7 @@ namespace DevIO.App.Controllers
         [Route("erro/{id:length(3,3)}")]
         public IActionResult Errors(int id)
         {
-            ErrorViewModel _modelErro = new ErrorViewModel();
+            ErrorViewModel _modelErro = new();
 
             switch (id)
             {
