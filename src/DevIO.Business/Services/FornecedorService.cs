@@ -9,8 +9,14 @@ namespace DevIO.Business.Services
 {
     public class FornecedorService : BaseService, IFornecedorService
     {
+        #region Private Fields
+
         private readonly IEnderecoRepository _enderecoRepository;
         private readonly IFornecedorRepository _fornecedorRepository;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public FornecedorService(IEnderecoRepository enderecoRepository,
                                  IFornecedorRepository fornecedorRepository,
@@ -19,6 +25,10 @@ namespace DevIO.Business.Services
             _enderecoRepository = enderecoRepository;
             _fornecedorRepository = fornecedorRepository;
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task Adicionar(Fornecedor fornecedor)
         {
@@ -72,5 +82,7 @@ namespace DevIO.Business.Services
             _fornecedorRepository?.Dispose();
             _enderecoRepository?.Dispose();
         }
+
+        #endregion Public Methods
     }
 }

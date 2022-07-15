@@ -8,13 +8,23 @@ namespace DevIO.Business.Services
 {
     public class ProdutoService : BaseService, IProdutoService
     {
+        #region Private Fields
+
         private readonly IProdutoRepository _produtoRepository;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public ProdutoService(INotificador notificador,
                               IProdutoRepository produtoRepository) : base(notificador)
         {
             _produtoRepository = produtoRepository;
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task Adicionar(Produto produto)
         {
@@ -41,5 +51,7 @@ namespace DevIO.Business.Services
         {
             _produtoRepository?.Dispose();
         }
+
+        #endregion Public Methods
     }
 }
