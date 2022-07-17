@@ -9,6 +9,8 @@ namespace DevIO.App.Extensions
 {
     public class MoedaAttribute : ValidationAttribute
     {
+        #region Protected Methods
+
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             try
@@ -22,14 +24,22 @@ namespace DevIO.App.Extensions
 
             return ValidationResult.Success;
         }
+
+        #endregion Protected Methods
     }
 
     public class MoedaAttributeAdapter : AttributeAdapterBase<MoedaAttribute>
     {
+        #region Public Constructors
+
         public MoedaAttributeAdapter(MoedaAttribute attribute, IStringLocalizer stringLocalizer) : base(attribute, stringLocalizer)
         {
 
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public override void AddValidation(ClientModelValidationContext context)
         {
@@ -45,11 +55,19 @@ namespace DevIO.App.Extensions
         {
             return "Moeda em formato inválido";
         }
+
+        #endregion Public Methods
     }
 
     public class MoedaValidationAttributeAdapterProvider : IValidationAttributeAdapterProvider
     {
+        #region Private Fields
+
         private readonly IValidationAttributeAdapterProvider _baseProvider = new ValidationAttributeAdapterProvider();
+
+        #endregion Private Fields
+
+        #region Public Methods
 
         public IAttributeAdapter GetAttributeAdapter(ValidationAttribute attribute, IStringLocalizer stringLocalizer)
         {
@@ -60,5 +78,7 @@ namespace DevIO.App.Extensions
 
             return _baseProvider.GetAttributeAdapter(attribute, stringLocalizer);
         }
+
+        #endregion Public Methods
     }
 }

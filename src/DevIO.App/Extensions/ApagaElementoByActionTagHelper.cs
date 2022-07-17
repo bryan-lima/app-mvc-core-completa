@@ -8,15 +8,29 @@ namespace DevIO.App.Extensions
     [HtmlTargetElement("*", Attributes = "supress-by-action")]
     public class ApagaElementoByActionTagHelper : TagHelper
     {
+        #region Private Fields
+
         private readonly IHttpContextAccessor _contextAccessor;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public ApagaElementoByActionTagHelper(IHttpContextAccessor contextAccessor)
         {
             _contextAccessor = contextAccessor;
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
         [HtmlAttributeName("supress-by-action")]
         public string ActionName { get; set; }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -33,5 +47,7 @@ namespace DevIO.App.Extensions
 
             output.SuppressOutput();
         }
+
+        #endregion Public Methods
     }
 }

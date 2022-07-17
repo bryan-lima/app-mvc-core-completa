@@ -5,8 +5,14 @@ namespace DevIO.App.Extensions
 {
     public class EmailTagHelper : TagHelper
     {
+        #region Public Properties
+
         public string EmailDomain { get; set; } = "desenvolvedor.io";
 
+        #endregion Public Properties
+
+        #region Public Methods
+        
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "a";
@@ -15,5 +21,7 @@ namespace DevIO.App.Extensions
             output.Attributes.SetAttribute("href", $"mailto{_target}");
             output.Content.SetContent(_target);
         }
+
+        #endregion Public Methods
     }
 }

@@ -8,12 +8,22 @@ namespace DevIO.App.Extensions
 {
     public class SummaryViewComponent : ViewComponent
     {
+        #region Private Fields
+
         private readonly INotificador _notificador;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public SummaryViewComponent(INotificador notificador)
         {
             _notificador = notificador;
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
@@ -24,5 +34,7 @@ namespace DevIO.App.Extensions
 
             return View();
         }
+
+        #endregion Public Methods
     }
 }

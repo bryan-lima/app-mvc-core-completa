@@ -8,18 +8,32 @@ namespace DevIO.App.Extensions
     [HtmlTargetElement("a", Attributes = "disable-by-claim-value")]
     public class DesabilitaLinkByClaimTagHelper : TagHelper
     {
+        #region Private Fields
+
         private readonly IHttpContextAccessor _contextAccessor;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public DesabilitaLinkByClaimTagHelper(IHttpContextAccessor contextAccessor)
         {
             _contextAccessor = contextAccessor;
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
         [HtmlAttributeName("disable-by-claim-name")]
         public string IdentityClaimName { get; set; }
 
         [HtmlAttributeName("disable-by-claim-value")]
         public string IdentityClaimValue { get; set; }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -40,5 +54,7 @@ namespace DevIO.App.Extensions
             output.Attributes.Add(new TagHelperAttribute("style", "cursor: not-allowed"));
             output.Attributes.Add(new TagHelperAttribute("title", "Você não tem permissão"));
         }
+
+        #endregion Public Methods
     }
 }

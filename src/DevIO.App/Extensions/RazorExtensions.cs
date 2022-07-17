@@ -5,6 +5,8 @@ namespace DevIO.App.Extensions
 {
     public static class RazorExtensions
     {
+        #region Public Methods
+
         public static string FormataDocumento(this RazorPage page, int tipoPessoa, string documento)
         {
             return tipoPessoa == 1
@@ -13,5 +15,7 @@ namespace DevIO.App.Extensions
                        : Convert.ToUInt64(documento)
                                 .ToString(@"00\.000\.000\/0000\-00");
         }
+
+        #endregion Public Methods
     }
 }
